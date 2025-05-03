@@ -6,12 +6,9 @@ const app = express();
 
 dotenv.config();
 
-app.listen(process.env.PORT, () => {
-  console.log(`Server Running at http://localhost:${process.env.PORT}`);
-});
+app.use(express.json());
 
-
-app.post("user/generateToken", (req, res) => {
+app.post("/user/generateToken", (req, res) => {
   let jwtSecretKey = process.env.JWT_SECRET_KEY;
   let data = {
     email: "test@gmail.com",
@@ -22,12 +19,12 @@ app.post("user/generateToken", (req, res) => {
   res.send(token);
 });
 
-app.get("user/validateToken", (req, res) => {
+app.get("/user/validateToken", (req, res) => {
   let tokenHeaderKey = process.env.TOKEN_HEADER_KEY;
   let jwtSecretKey = process.env.JWT_SECRET_KEY;
 
   try {
-    const token = req.header(tokenHeaderKey);
+    let token = req.header(tokenHeaderKey);
 
     const verified = jwt.verify(token, jwtSecretKey);
     if (verified) {
@@ -40,6 +37,10 @@ app.get("user/validateToken", (req, res) => {
   }
 });
 
-app.get("user/hello", (req, res) => {
-  res.send("Hello World");
+app.get('/', (req, res) => {
+  res.send('Hello world');
+});
+
+app.listen(process.env.PORT, () => {
+  console.log(`Server Running at http://localhost:${process.env.PORT}`);
 });
